@@ -3,9 +3,7 @@
 #include "ble.h"
 #include <Arduino.h>
 
-
 using namespace ble;
-
 
 BLEKeyboard::BLEKeyboard(std::string deviceName, std::string deviceManufacturer) {
   this->deviceName = deviceName;
@@ -16,8 +14,6 @@ BLEKeyboard::BLEKeyboard(std::string deviceName, std::string deviceManufacturer)
   this->pServer = BLEDevice::createServer();
   pServer->setCallbacks(this);
   BLEDevice::setSecurityCallbacks(this);
-
-
 
   BLESecurity *pSecurity = new BLESecurity();
   pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
@@ -35,7 +31,6 @@ BLEKeyboard::BLEKeyboard(std::string deviceName, std::string deviceManufacturer)
   hid->hidInfo(0x00, 0x01);
   hid->reportMap((uint8_t*)_hidReportDescriptor, sizeof(_hidReportDescriptor));
   hid->startServices();
-
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
   pAdvertising->setScanResponse(true);
@@ -57,9 +52,10 @@ BLEKeyboard::~BLEKeyboard() {
 
 void BLEKeyboard::onConnect(BLEServer* pServer)
 {
-  Serial.println("TryConnect");
-
-
+  Serial.println("TryConnect");//尝试蓝牙连接
+  BLEDescriptor *desc = inputKeyboard->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
+  uint8_t val[] = {0x01, 0x00};
+  desc->setValue(val, 2);
   //TODO: Notify of incomming connection
 }
 
@@ -80,7 +76,7 @@ void BLEKeyboard::onPassKeyNotify(uint32_t pass_key)
   //TODO notify we need to display the PIN
   if (callbacks != NULL) {
     Serial.println("Show PIN");
-    callbacks->authenticationInfo(pass_key);
+    callbacks->authenticationInfo(pass_key);//显示蓝牙密钥
   } else {
     Serial.println("No callback to notify");
   }
@@ -99,7 +95,6 @@ void BLEKeyboard::onAuthenticationComplete(esp_ble_auth_cmpl_t cmpl)
     //TODO: Notify connection succeeded
     this->connected = true;
     callbacks->connected();
-
   } else {
 
     disconnect();

@@ -54,7 +54,6 @@ espwv32::Credentials Storage::decrypt(espwv32::Credentials encryptedCredentials,
   return credentials;
 }
 
-
 uint8_t* Storage::calculateIV(uint8_t iv[], uint8_t pin[]) {
   memset( iv, 0, sizeof( iv ) );
 

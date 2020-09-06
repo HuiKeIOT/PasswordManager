@@ -244,7 +244,7 @@ class BLEKeyboard : private BLEServerCallbacks,  private BLESecurityCallbacks, p
     KeyReport _keyReport;
 
   public:
-    BLEKeyboard(std::string deviceName = "ESPWV32", std::string deviceManufacturer = "Espressif");
+    BLEKeyboard(std::string deviceName = "ESP32 BLE Keyboard", std::string deviceManufacturer = "Espressif");
 
     ~BLEKeyboard();
 

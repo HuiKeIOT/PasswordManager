@@ -23,21 +23,47 @@ class AccountSelectionScreen: public GenericScreen {
       _accountIndex = 0;
       GenericScreen::reset();
     }
-    virtual void buttonPressedA() {
+
+    virtual void buttonPressedA() {//A键短按
       _accountIndex++;
-      if (_accountIndex >= NUM_ACCOUNTS)
+      if (_accountIndex >= NUM_ACCOUNTS)//要与设置的账户组数量匹配
         _accountIndex = 0;
       Serial.printf("Next %d \n", _accountIndex);
-      show();
+      show();//账户页面，递增
+    
+    switch (_accountIndex)
+    {
+    case 0://QQ
+    _dataToSend = PASSWORD;//和初始默认值保持一致
+    break;
+    case 1://Tongji GM
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 2://Taobao
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 3://School Email
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 4://Ubuntu
+    _dataToSend = PASSWORD;
+    break;
+    case 5://Windows 10
+    _dataToSend = PASSWORD;
+    break;
+    case 6://Google
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 7://Bilibili
+    _dataToSend = USERNAME;
+    break;
+    default://Others
+   break;
     }
-    virtual void buttonMediumPressedA() {
-      _accountIndex--;
-      if (_accountIndex <= 0)
-        _accountIndex = NUM_ACCOUNTS;
-      Serial.printf("Previous %d \n", _accountIndex);
-      show();
+    showDataToSendControls();
     }
-    virtual void buttonPressedB() {
+
+    virtual void buttonMediumPressedA() {//A按键中按,发送信息
       M5.Lcd.fillScreen(WHITE);
       Serial.println("sending");
       switch (_dataToSend) {
@@ -60,23 +86,70 @@ class AccountSelectionScreen: public GenericScreen {
       }
       show();
     }
-    virtual void buttonMediumPressedB() {
+
+    virtual void buttonPressedB() {//B按键短按
+    if (_accountIndex == 0)
+    {
+      _accountIndex = NUM_ACCOUNTS-1;
+    }
+    else
+    {
+      _accountIndex--;
+    }
+      Serial.printf("Previous %d \n", _accountIndex);
+      show();//账户页面，递减
+
+   switch (_accountIndex)
+    {
+    case 0://Windows 10
+    _dataToSend = PASSWORD;//和初始默认值保持一致
+    break;
+    case 1://Tongji GM
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 2://Taobao
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 3://School Email
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 4://Ubuntu
+    _dataToSend = PASSWORD;
+    break;
+    case 5://QQ
+    _dataToSend = PASSWORD;
+    break;
+    case 6://Google
+    _dataToSend = USERNAME_PASSWORD;
+    break;
+    case 7://Bilibili
+    _dataToSend = USERNAME;
+    break;
+    default://Others
+   break;
+    }
+    showDataToSendControls();
+    }
+
+    virtual void buttonMediumPressedB() {//B按键中按,切换发送类型
       switch (_dataToSend) {
-        case USERNAME_PASSWORD:
-          _dataToSend = USERNAME;
-          break;
-        case USERNAME:
-          _dataToSend = PASSWORD;
-          break;
-        case PASSWORD:
-          _dataToSend = USERNAME_PASSWORD;
-          break;
+      case USERNAME_PASSWORD:
+        _dataToSend = USERNAME;//只发送用户名
+        break;
+      case USERNAME:
+        _dataToSend = PASSWORD;//只发送密码
+        break;
+      case PASSWORD:
+        _dataToSend = USERNAME_PASSWORD;//用户名以及密码都发送
+        break;
       }
       showDataToSendControls();
     }
+
     ScreenType getType() {
       return ACCOUNT_SELECTION;
     }
+
     void show() {
       M5.Lcd.fillScreen(BLACK);
       M5.Lcd.setRotation(3);
@@ -99,6 +172,7 @@ class AccountSelectionScreen: public GenericScreen {
       M5.Lcd.setCursor(-1, 25);
       M5.Lcd.printf("%c", 175);
     }
+    
     void showDataToSendControls() {
       M5.Lcd.fillRect(56,0,61,15, BLACK);
       M5.Lcd.setCursor(60, 4);
@@ -122,7 +196,7 @@ class AccountSelectionScreen: public GenericScreen {
   private:
     uint8_t* _userPin;
     uint8_t _userPinSize;
-    const uint8_t NUM_ACCOUNTS = 10; // TODO: move to storage
+    const uint8_t NUM_ACCOUNTS =8; // TODO: move to storage
     Storage* _storage;
     uint8_t _accountIndex = 0;
     enum DataToSend {
@@ -130,7 +204,7 @@ class AccountSelectionScreen: public GenericScreen {
       USERNAME,
       PASSWORD
     };
-    DataToSend _dataToSend = USERNAME_PASSWORD;
+    DataToSend _dataToSend = PASSWORD;
     Credentials _currentAccount;
     ble::BLEKeyboard* _keyboard;
 };

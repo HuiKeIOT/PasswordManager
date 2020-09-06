@@ -24,8 +24,6 @@ class System {
       return map(getBatteryVoltage(), 3200, 4200, 0, 100);
     }
 };
-
-
 }
 
 #endif /* MY_CLASS_System*/

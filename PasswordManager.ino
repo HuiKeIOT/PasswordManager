@@ -19,7 +19,6 @@ espwv32::GenericScreen* _accountSelectionScreen;
 
 ble::BLEKeyboard* _keyboard;
 
-
 class MyKeyboardCallbacks: public ble::BLEKeyboardCallbacks {
     void authenticationInfo(uint32_t pin) {
       Serial.println(pin);
@@ -34,6 +33,7 @@ class MyKeyboardCallbacks: public ble::BLEKeyboardCallbacks {
       _lockScreen = new espwv32::LockScreen();
       _currentScreen = _lockScreen;
     }
+
     void disconnected() {
       Serial.println("disconnected");
       _currentScreen = _startScreen;
@@ -59,8 +59,6 @@ void setup() {
   storeDummyAccounts();
 }
 
-
-
 void loop() {
   M5.update();
   if (_currentScreen->next()) {
@@ -77,87 +75,96 @@ void loop() {
         break;
       default:
         Serial.println("unknown type");
-
     }
   }
 
-
   if (millis() % 77 == 0) {
-    _currentScreen->updateBatteryPercentage(espwv32::System::getBatteryPercentage());
-    _keyboard->setBatteryLevel(espwv32::System::getBatteryPercentage());
+    _currentScreen->updateBatteryPercentage(espwv32::System::getBatteryPercentage());//显示电池百分比
+    _keyboard->setBatteryLevel(espwv32::System::getBatteryPercentage());//发送电池百分比
     _currentScreen->updateConnected(_keyboard->isConnected());
   }
 
-
-
-  if (M5.BtnA.wasReleasefor(2000)) {
+  if (M5.BtnA.wasReleasefor(2000)) {//A按键长长按
     //keyboard->disconnect();
     //M5.Axp.DeepSleep(SLEEP_SEC(10));
-    Serial.println("Going to sleep");
+    //Serial.println("Going to sleep");
   } else {
     if (M5.BtnA.wasReleasefor(1000)) {
-      Serial.println("A long pressed");
+      Serial.println("A long pressed");//A按键长按
       _currentScreen->buttonLongPressedA();
     } else {
-
-      if (M5.BtnA.wasReleasefor(500)) {
-        Serial.println("A medium pressed");
+      if (M5.BtnA.wasReleasefor(200)) {
+        Serial.println("A medium pressed");//A按键中按
         _currentScreen->buttonMediumPressedA();
       } else {
-
         if (M5.BtnA.wasReleasefor(1)) {
-          Serial.println("A pressed");
+          Serial.println("A pressed");//A按键短按
           _currentScreen->buttonPressedA();
         }
       }
     }
   }
 
-
   if (M5.BtnB.wasReleasefor(1000)) {
-    Serial.println("B long pressed");
+    Serial.println("B long pressed");//B按键长按
     _currentScreen->buttonLongPressedB();
   } else {
 
-    if (M5.BtnB.wasReleasefor(500)) {
-      Serial.println("B medium pressed");
+    if (M5.BtnB.wasReleasefor(200)) {
+      Serial.println("B medium pressed");//B按键中按
       _currentScreen->buttonMediumPressedB();
     } else {
 
       if (M5.BtnB.wasReleasefor(1)) {
-        Serial.println("B pressed");
+        Serial.println("B pressed");//B按键短按
         _currentScreen->buttonPressedB();
       }
     }
   }
-
-
-
-
 }
 
 void storeDummyAccounts() {
-  uint8_t _userPin[4] = {1, 2, 3, 4};
+  uint8_t _userPin[4] = {0,0,0,0};
   espwv32::Credentials storedCredentials[] = {
-    {
-      "Account 1",
-      "User 1",
-      "Password 1"
+{
+      "Windows 10",
+      "xxxx",
+      "xxxx"
     },
     {
-      "Account 2",
-      "User 2",
-      "Password 2"
+      "TongJi GM",
+      "xxxx",
+      "xxxx"
     },
     {
-      "Account 3",
-      "User 3",
-      "Password 3"
+      "Taobao",
+      "xxxx",
+      "xxxx"
     },
     {
-      "Account 4",
-      "User 4",
-      "Password 4"
+      "School Email",
+      "xxxx",
+      "xxxx"
+    },
+    {
+      "Ubuntu",
+      "xxxx",
+      "xxxx"
+    },
+    {
+      "QQ",
+      "xxxx",
+      "xxxx"
+    },
+    {
+      "Google",
+      "xxxx",
+      "xxxx"
+    },
+    {
+      "Bilibili",
+      "xxxx",
+      "xxxx"
     }
   };
   Serial.println("inserting dummy credentials");
@@ -165,7 +172,7 @@ void storeDummyAccounts() {
   //Initialising accounts until this feature is implemented
   for (byte index = 0; index < sizeof(storedCredentials) / sizeof(espwv32::Credentials); index++) {
     espwv32::Credentials credsR = storage->read(index, _userPin);
-    if (!String(storedCredentials[index].name).equals(String(credsR.name))) {
+    if (!String(storedCredentials[index].name).equals(String(credsR.name))) {//字符比较
       Serial.printf("Store %d = %s \n", index, storedCredentials[index].name);
       storage->store(index, storedCredentials[index], _userPin);
     } else {
