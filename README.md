@@ -40,7 +40,7 @@
 - 打开Manage Libraries，输入M5StickC并安装  
 ![](doc/library_manager.png)  
 
-- 修改编辑账号
+- 修改编辑账号  
 ![](doc/password.png)  
 `_userPin[4] = {0,0,0,0}`用于设置初始密码  
 `   {
