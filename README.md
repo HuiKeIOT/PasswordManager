@@ -18,8 +18,11 @@
 * [x] Modified the sending button logic 修改了发送的按键逻辑
 * [x] Customize some accounts that only send passwords, don't switch every time 可以自定义部分账号只发送密码,不要每次都切换
 * [x] Fix the problem of returning from account 00 to the previous page 修复从账户00返回上一页的问题
-* [x] Add Chinese comment 增加中文注释
+* [x] Add Chinese comment 增加中文注释  
   
+
+## 待添加功能  
+* [ ] 长时间不使用显示时间
 
 ## 参考
 - https://github.com/Joengenduvel/espwv32
