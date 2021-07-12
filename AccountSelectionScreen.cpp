@@ -122,14 +122,11 @@ class AccountSelectionScreen: public GenericScreen {
     case 6://Google
     _dataToSend = USERNAME_PASSWORD;
     break;
-    case 7://Bilibili
-    _dataToSend = USERNAME;
-    break;
     default://Others
    break;
     }
     showDataToSendControls();
-    }
+  }
 
     virtual void buttonMediumPressedB() {//B按键中按,切换发送类型
       switch (_dataToSend) {
@@ -157,7 +154,7 @@ class AccountSelectionScreen: public GenericScreen {
       _currentAccount = _storage->read(_accountIndex, _userPin);
 
       M5.Lcd.setCursor(2, 2);
-      M5.Lcd.setTextSize(3);
+      M5.Lcd.setTextSize(3);//旋转角度 r (x 90°)
       M5.Lcd.setTextColor(BLUE);
       M5.Lcd.printf("%02d", _accountIndex);
 
@@ -196,7 +193,7 @@ class AccountSelectionScreen: public GenericScreen {
   private:
     uint8_t* _userPin;
     uint8_t _userPinSize;
-    const uint8_t NUM_ACCOUNTS =8; // TODO: move to storage
+    const uint8_t NUM_ACCOUNTS =7; // TODO: move to storage
     Storage* _storage;
     uint8_t _accountIndex = 0;
     enum DataToSend {

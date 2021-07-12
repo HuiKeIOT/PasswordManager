@@ -8,7 +8,7 @@
 #include "Storage.h"
 #include "System.cpp"
 
-
+  RTC_TimeTypeDef TimeStruct;
 
 espwv32::GenericScreen* _currentScreen;
 espwv32::GenericScreen* _startScreen;
@@ -56,6 +56,10 @@ void setup() {
   _keyboard = new ble::BLEKeyboard("");
   _keyboard->setCallbacks(new MyKeyboardCallbacks());
 
+  TimeStruct.Hours   = 21;
+  TimeStruct.Minutes = 13;
+  M5.Rtc.SetTime(&TimeStruct);
+
   storeDummyAccounts();
 }
 
@@ -78,93 +82,56 @@ void loop() {
     }
   }
 
-  if (millis() % 77 == 0) {
+if (M5.BtnA.wasReleasefor(1000))
+{
+    Serial.println("A long pressed");//A按键长按
+    _currentScreen->buttonLongPressedA();
+}
+else if (M5.BtnA.wasReleasefor(200))
+{
+    Serial.println("A medium pressed");//A按键中按
+    _currentScreen->buttonMediumPressedA();
+}
+else if (M5.BtnA.wasReleasefor(1))
+{
+    Serial.println("A pressed");//A按键短按
+    _currentScreen->buttonPressedA();
+}
+else if (M5.BtnB.wasReleasefor(1000))
+{
+    Serial.println("B long pressed");//B按键长按
+    _currentScreen->buttonLongPressedB();
+}
+else if(M5.BtnB.wasReleasefor(200))
+{
+    Serial.println("B medium pressed");//B按键中按
+    _currentScreen->buttonMediumPressedB();
+}
+else if(M5.BtnB.wasReleasefor(1))
+{
+    Serial.println("B pressed");//B按键短按
+    _currentScreen->buttonPressedB();
+}
+else if (millis() % 100 == 0) 
+{
     _currentScreen->updateBatteryPercentage(espwv32::System::getBatteryPercentage());//显示电池百分比
     _keyboard->setBatteryLevel(espwv32::System::getBatteryPercentage());//发送电池百分比
     _currentScreen->updateConnected(_keyboard->isConnected());
-  }
-
-  if (M5.BtnA.wasReleasefor(2000)) {//A按键长长按
-    //keyboard->disconnect();
-    //M5.Axp.DeepSleep(SLEEP_SEC(10));
-    //Serial.println("Going to sleep");
-  } else {
-    if (M5.BtnA.wasReleasefor(1000)) {
-      Serial.println("A long pressed");//A按键长按
-      _currentScreen->buttonLongPressedA();
-    } else {
-      if (M5.BtnA.wasReleasefor(200)) {
-        Serial.println("A medium pressed");//A按键中按
-        _currentScreen->buttonMediumPressedA();
-      } else {
-        if (M5.BtnA.wasReleasefor(1)) {
-          Serial.println("A pressed");//A按键短按
-          _currentScreen->buttonPressedA();
-        }
-      }
-    }
-  }
-
-  if (M5.BtnB.wasReleasefor(1000)) {
-    Serial.println("B long pressed");//B按键长按
-    _currentScreen->buttonLongPressedB();
-  } else {
-
-    if (M5.BtnB.wasReleasefor(200)) {
-      Serial.println("B medium pressed");//B按键中按
-      _currentScreen->buttonMediumPressedB();
-    } else {
-
-      if (M5.BtnB.wasReleasefor(1)) {
-        Serial.println("B pressed");//B按键短按
-        _currentScreen->buttonPressedB();
-      }
-    }
-  }
+}
 }
 
 void storeDummyAccounts() {
   uint8_t _userPin[4] = {0,0,0,0};
   espwv32::Credentials storedCredentials[] = {
-{
-      "Windows 10",
-      "xxxx",
-      "xxxx"
+    {
+      "Account1",
+      "USERNAME",
+      "PASSWORD"
     },
     {
-      "TongJi GM",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "Taobao",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "School Email",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "Ubuntu",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "QQ",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "Google",
-      "xxxx",
-      "xxxx"
-    },
-    {
-      "Bilibili",
-      "xxxx",
-      "xxxx"
+      "Account2",
+      "USERNAME",
+      "PASSWORD"
     }
   };
   Serial.println("inserting dummy credentials");

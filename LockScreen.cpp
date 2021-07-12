@@ -4,18 +4,18 @@
 
 namespace espwv32 {
 
-class LockScreen : public GenericScreen {
-    void buttonPressedA() {
+class LockScreen : public GenericScreen {//锁屏界面
+    void buttonPressedA() {//短按A，位数依次递增
       _userPinIndex++;
       if (_userPinIndex >= numberOfDigits)
         _userPinIndex = 0;
       show();
     }
-    void buttonMediumPressedA() {
+    void buttonMediumPressedA() {//中按A确认
       M5.Lcd.fillScreen(BLACK);
       _toNextScreen = true;
     }
-    void buttonPressedB() {
+    void buttonPressedB() {//短按B，数字依次递增
       _userPin[_userPinIndex]++;
       if (_userPin[_userPinIndex] > 9)
         _userPin[_userPinIndex] = 0;
